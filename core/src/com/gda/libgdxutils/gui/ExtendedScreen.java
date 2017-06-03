@@ -18,7 +18,7 @@ public class ExtendedScreen implements Screen {
     private OrthographicCamera camera;
 
     //параметры видимого поля, используются для позиционирования элементов в игре
-    private static float SCREEN_WIDTH, SCREEN_HEIGHT;
+    private float SCREEN_WIDTH, SCREEN_HEIGHT;
     private Viewport viewport;
 
     //Визуальная составляющая игры
@@ -113,5 +113,21 @@ public class ExtendedScreen implements Screen {
     @Override
     public void dispose() {
         gameStage.dispose();
+    }
+
+    public Stage getGameStage() {
+        return gameStage;
+    }
+
+    public void setGameStage(Stage gameStage) {
+        this.gameStage = gameStage;
+    }
+
+    public float getScreenWidth() {
+        return SCREEN_WIDTH;
+    }
+
+    public float getScreenHeight() {
+        return SCREEN_HEIGHT;
     }
 }

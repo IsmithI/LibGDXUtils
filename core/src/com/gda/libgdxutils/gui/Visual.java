@@ -2,6 +2,7 @@ package com.gda.libgdxutils.gui;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.gda.libgdxutils.Input;
 import com.gda.libgdxutils.gui.animation.Animation;
 import com.gda.libgdxutils.model.JustTexture;
 
@@ -23,11 +24,11 @@ public class Visual {
 
     Animation animation;
 
-    public Visual(GroupBuilder builder, float screen_width, float screen_height) {
+    public Visual(GroupBuilder builder) {
         animation = builder.animation;
         groups = builder.groups;
-        SCREEN_WIDTH = screen_width;
-        SCREEN_HEIGHT = screen_height;
+        SCREEN_WIDTH = Input.getScreenWidth();
+        SCREEN_HEIGHT = Input.getScreenHeight();
 
         for (Group group : groups.values()) {
             builder.stage.addActor(group);
@@ -62,11 +63,18 @@ public class Visual {
         private Stage stage;
         private final float SCREEN_WIDTH, SCREEN_HEIGHT;
 
-        public GroupBuilder(Stage stage, float screen_width, float screen_height) {
-            SCREEN_WIDTH = screen_width;
-            SCREEN_HEIGHT = screen_height;
+        public GroupBuilder(Stage stage) {
+            SCREEN_WIDTH = Input.getScreenWidth();
+            SCREEN_HEIGHT = Input.getScreenHeight();
             groups = new HashMap<String, Group>();
             this.stage = stage;
+        }
+
+        public GroupBuilder(ExtendedScreen screen) {
+            SCREEN_HEIGHT = screen.getScreenHeight();
+            SCREEN_WIDTH = screen.getScreenWidth();
+            groups = new HashMap<String, Group>();
+            this.stage = screen.getGameStage();
         }
 
         public GroupBuilder setAnimation(Animation animation) {
@@ -93,7 +101,7 @@ public class Visual {
         }
 
         public Visual build() {
-            return new Visual(this, SCREEN_WIDTH, SCREEN_HEIGHT);
+            return new Visual(this);
         }
     }
 }
