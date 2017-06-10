@@ -6,8 +6,8 @@ import com.gda.libgdxutils.Input;
 import com.gda.libgdxutils.gui.animation.Animation;
 import com.gda.libgdxutils.model.JustTexture;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by ANTON on 5/5/2017.
@@ -19,7 +19,7 @@ public class Visual {
 //    private Group main, multi, option, help;
 
     private JustTexture background;
-    private Map<String, Group> groups;
+    private List<Group> groups;
     private final float SCREEN_WIDTH, SCREEN_HEIGHT;
 
     Animation animation;
@@ -30,9 +30,11 @@ public class Visual {
         SCREEN_WIDTH = Input.getScreenWidth();
         SCREEN_HEIGHT = Input.getScreenHeight();
 
-        for (Group group : groups.values()) {
+
+        for (Group group : groups) {
             builder.stage.addActor(group);
         }
+
     }
 
     //      Создаём бэкграунд, поскольку в кадой группе свой бэкграунд, но он одинаковый, по анимации увидишь
@@ -50,7 +52,7 @@ public class Visual {
         return background;
     }
 
-    public Map<String, Group> getGroups() {
+    public List<Group> getGroups() {
         return groups;
     }
 
@@ -58,7 +60,7 @@ public class Visual {
 
         private Animation animation;
 
-        private Map<String, Group> groups;
+        private List<Group> groups;
 
         private Stage stage;
         private final float SCREEN_WIDTH, SCREEN_HEIGHT;
@@ -66,14 +68,14 @@ public class Visual {
         public GroupBuilder(Stage stage) {
             SCREEN_WIDTH = Input.getScreenWidth();
             SCREEN_HEIGHT = Input.getScreenHeight();
-            groups = new HashMap<String, Group>();
+            groups = new ArrayList<>();
             this.stage = stage;
         }
 
         public GroupBuilder(ExtendedScreen screen) {
             SCREEN_HEIGHT = screen.getScreenHeight();
             SCREEN_WIDTH = screen.getScreenWidth();
-            groups = new HashMap<String, Group>();
+            groups = new ArrayList<>();
             this.stage = screen.getGameStage();
         }
 
@@ -84,19 +86,15 @@ public class Visual {
 
         public GroupBuilder addGroup(String groupName, Group group) {
             group.setVisible(true);
-            groups.put(groupName, group);
+            groups.add(group);
             return this;
         }
 
         public GroupBuilder setMainBackground(JustTexture justTexture) {
-            if (groups.containsKey("BACKGROUND")) {
-                groups.get("BACKGROUND").addActor(justTexture);
-            } else {
-                Group background = new Group();
-                justTexture.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-                background.addActor(justTexture);
-                addGroup("BACKGROUND", background);
-            }
+            Group background = new Group();
+            justTexture.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+            background.addActor(justTexture);
+            addGroup("BACKGROUND", background);
             return this;
         }
 

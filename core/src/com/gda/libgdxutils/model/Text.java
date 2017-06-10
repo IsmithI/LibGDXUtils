@@ -31,8 +31,8 @@ public class Text extends Actor {
         font = builder.font;
         value = builder.value;
         textAlign = builder.textAlign;
-        if (builder.color != null)
-            font.setColor(builder.color);
+//        if (builder.color != null)
+        font.setColor(builder.color);
     }
 
     @Override
@@ -76,8 +76,9 @@ public class Text extends Actor {
         int textAlign;
         Color color;
 
-        public TextBuilder withFont(BitmapFont font) {
+        public TextBuilder withFont(BitmapFont font, Color color) {
             this.font = font;
+            this.color = color;
             return this;
         }
 
@@ -94,13 +95,6 @@ public class Text extends Actor {
 
         public TextBuilder alignBy(int textAlign) {
             this.textAlign = textAlign;
-            return this;
-        }
-
-        public TextBuilder color(Color color) {
-            font.setColor(Color.BLACK);
-            this.color = color;
-//            font.setColor(color);
             return this;
         }
 

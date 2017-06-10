@@ -2,6 +2,7 @@ package com.gda.libgdxutils.gui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -19,6 +20,7 @@ public class ExtendedScreen implements Screen {
 
     //параметры видимого поля, используются для позиционирования элементов в игре
     private float SCREEN_WIDTH, SCREEN_HEIGHT;
+    private final float SCALE;
     private Viewport viewport;
 
     //Визуальная составляющая игры
@@ -33,8 +35,10 @@ public class ExtendedScreen implements Screen {
         при чем высота умножается на коефициент пропорциональности экрана, который был высчитан ранее
         и равен отношению высоты экрана к ширине, а также саму камеру
         */
+        SCALE = (float) Gdx.graphics.getHeight()/Gdx.graphics.getWidth();
+
         camera = new OrthographicCamera();
-        viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
+        viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT*SCALE, camera);
         viewport.apply();
 
         //применяем созданный вид на сцене
@@ -129,5 +133,13 @@ public class ExtendedScreen implements Screen {
 
     public float getScreenHeight() {
         return SCREEN_HEIGHT;
+    }
+
+    public void addInputProcessor(InputProcessor inputProcessor) {
+        input.addProcessor(inputProcessor);
+    }
+
+    public InputMultiplexer getInput() {
+        return input;
     }
 }
