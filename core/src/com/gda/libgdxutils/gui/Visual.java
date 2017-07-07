@@ -1,9 +1,7 @@
 package com.gda.libgdxutils.gui;
 
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.gda.libgdxutils.Input;
 import com.gda.libgdxutils.gui.animation.Animation;
 import com.gda.libgdxutils.model.JustTexture;
 
@@ -12,7 +10,7 @@ import java.util.List;
 
 /**
  * Created by ANTON on 5/5/2017.
- * Group - it's actor, which accommodates another actors
+ * Group - it's an actor, which accommodates another actors
  */
 public class Visual {
 
