@@ -132,6 +132,10 @@ public class ExtendedScreen implements Screen {
                 0);
     }
 
+    public void emptyGameStage() {
+        gameStage.getActors().clear();
+    }
+
     @Override
     public void pause() {
 
