@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 /**
  * Created by smith on 10.06.17.
  */
-public class FadeAnimation implements ScreenAnimation {
+public class FadeAnimation implements GroupAnimation {
 
     private float duration;
 
@@ -15,11 +15,16 @@ public class FadeAnimation implements ScreenAnimation {
     }
 
     @Override
-    public void animate(Group hideGroup, Group showGroup) {
-        hideGroup.addAction(Actions.fadeOut(duration));
-        showGroup.setColor(showGroup.getColor().r, showGroup.getColor().g, showGroup.getColor().b, 0f);
-        showGroup.addAction(Actions.fadeIn(duration));
+    public void show(Group group) {
+        group.setColor(group.getColor().r, group.getColor().g, group.getColor().b, 0f);
+        group.addAction(Actions.fadeIn(duration));
     }
+
+    @Override
+    public void hide(Group group) {
+        group.addAction(Actions.fadeOut(duration));
+    }
+
 
     public float getDuration() {
         return duration;

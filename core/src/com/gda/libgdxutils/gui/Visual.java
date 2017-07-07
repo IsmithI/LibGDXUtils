@@ -1,5 +1,6 @@
 package com.gda.libgdxutils.gui;
 
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.gda.libgdxutils.Input;
@@ -19,27 +20,30 @@ public class Visual {
 //    private Group main, multi, option, help;
 
     private JustTexture background;
-    private List<Group> groups;
-    private final float SCREEN_WIDTH, SCREEN_HEIGHT;
+    private List<Group> gameGroups, guiGroups;
+    private ExtendedScreen screen;
 
     Animation animation;
 
     public Visual(GroupBuilder builder) {
         animation = builder.animation;
-        groups = builder.groups;
-        SCREEN_WIDTH = Input.getScreenWidth();
-        SCREEN_HEIGHT = Input.getScreenHeight();
+        gameGroups = builder.gameGroups;
+        guiGroups = builder.guiGroups;
+        screen = builder.screen;
 
+        for (Group group : gameGroups) {
+            builder.gameStage.addActor(group);
+        }
 
-        for (Group group : groups) {
-            builder.stage.addActor(group);
+        for (Group guiGroup : guiGroups) {
+            builder.guiStage.addActor(guiGroup);
         }
 
     }
 
     //      Создаём бэкграунд, поскольку в кадой группе свой бэкграунд, но он одинаковый, по анимации увидишь
     public void addBackground(Group group) {
-        background = new JustTexture("Menu/Background.png", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        background = new JustTexture("Menu/Background.png", 0, 0, screen.getGuiViewportWidth(), screen.getGuiViewportHeight());
         background.toBack();
         group.addActor(background);
     }
@@ -52,31 +56,31 @@ public class Visual {
         return background;
     }
 
-    public List<Group> getGroups() {
-        return groups;
+    public List<Group> getGameGroups() {
+        return gameGroups;
+    }
+
+    public List<Group> getGuiGroups() {
+        return guiGroups;
     }
 
     public static class GroupBuilder {
 
         private Animation animation;
 
-        private List<Group> groups;
+        private List<Group> gameGroups, guiGroups;
 
-        private Stage stage;
-        private final float SCREEN_WIDTH, SCREEN_HEIGHT;
-
-        public GroupBuilder(Stage stage) {
-            SCREEN_WIDTH = Input.getScreenWidth();
-            SCREEN_HEIGHT = Input.getScreenHeight();
-            groups = new ArrayList<>();
-            this.stage = stage;
-        }
+        private Stage gameStage, guiStage;
+        private ExtendedScreen screen;
 
         public GroupBuilder(ExtendedScreen screen) {
-            SCREEN_HEIGHT = screen.getScreenHeight();
-            SCREEN_WIDTH = screen.getScreenWidth();
-            groups = new ArrayList<>();
-            this.stage = screen.getGameStage();
+            this.screen = screen;
+
+            gameGroups = new ArrayList<>();
+            guiGroups = new ArrayList<>();
+
+            this.gameStage = screen.getGameStage();
+            this.guiStage = screen.getGuiStage();
         }
 
         public GroupBuilder setAnimation(Animation animation) {
@@ -84,17 +88,25 @@ public class Visual {
             return this;
         }
 
-        public GroupBuilder addGroup(String groupName, Group group) {
+        public GroupBuilder addGroupToGameStage(String groupName, Group group) {
             group.setVisible(true);
-            groups.add(group);
+            group.setName(groupName);
+            gameGroups.add(group);
+            return this;
+        }
+
+        public GroupBuilder addGroupToGUIStage(String groupName, Group group) {
+            group.setVisible(true);
+            group.setName(groupName);
+            guiGroups.add(group);
             return this;
         }
 
         public GroupBuilder setMainBackground(JustTexture justTexture) {
             Group background = new Group();
-            justTexture.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+            justTexture.setSize(screen.getGuiViewportWidth(), screen.getGuiViewportHeight());
             background.addActor(justTexture);
-            addGroup("BACKGROUND", background);
+            addGroupToGameStage("BACKGROUND", background);
             return this;
         }
 

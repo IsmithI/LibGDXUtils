@@ -15,4 +15,12 @@ public class ExtendedGroup extends Group {
         for (Actor actor : actors)
             addActor(actor);
     }
+
+    @Override
+    public void act(float delta) {
+        for (Actor actor : getChildren()) {
+            actor.act(delta);
+        }
+        super.act(delta);
+    }
 }

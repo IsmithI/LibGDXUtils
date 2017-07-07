@@ -8,23 +8,24 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.gda.libgdxutils.Input;
-
-import static com.gda.libgdxutils.Input.getInputX;
-import static com.gda.libgdxutils.Input.getInputY;
 
 /**
  * Created by smith on 03.06.17.
  */
 public class Joystick extends Actor implements InputProcessor {
 
-    private float angle = 0f;
-//    private boolean touch = false;
+    private float angle = 90f;
+    private boolean active = false;
+    private boolean controllable = true;
 
     private Sprite gamepad, joystick;
     private Vector2 gamepadPos, joystickPos;
 
+    int pointer = -1;
+
     private float SCREEN_WIDTH, SCREEN_HEIGHT;
+
+    private float scale = 1f;
 
     public Joystick(String gamepadPath, String joystickPath, float screen_width, float screen_height) {
         SCREEN_WIDTH = screen_width;
@@ -39,15 +40,19 @@ public class Joystick extends Actor implements InputProcessor {
         joystick.setOrigin(0, 0);
 
         joystickPos = new Vector2();
+
+        setPosition(gamepadPos.x, gamepadPos.y);
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        gamepad.setPosition(gamepadPos.x - gamepad.getWidth() / 2, SCREEN_HEIGHT - gamepadPos.y - gamepad.getHeight() / 2);
-        gamepad.draw(batch, parentAlpha);
+        if (active) {
+            gamepad.setPosition(gamepadPos.x - gamepad.getWidth() / 2, SCREEN_HEIGHT - gamepadPos.y - gamepad.getHeight() / 2);
+            gamepad.draw(batch, 0.5f);
 
-        joystick.setPosition(joystickPos.x - joystick.getWidth() / 2, SCREEN_HEIGHT - joystickPos.y - joystick.getHeight() / 2);
-        joystick.draw(batch, parentAlpha);
+            joystick.setPosition(joystickPos.x - joystick.getWidth() / 2, SCREEN_HEIGHT - joystickPos.y - joystick.getHeight() / 2);
+            joystick.draw(batch, 0.5f);
+        }
     }
 
 //    private void act() {
@@ -78,6 +83,15 @@ public class Joystick extends Actor implements InputProcessor {
 //
 //    }
 
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     public float getAngle() {
         return angle;
     }
@@ -103,31 +117,40 @@ public class Joystick extends Actor implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        gamepadPos.set(screenX, screenY);
-        joystickPos.set(screenX, screenY);
+        if (controllable) {
+            this.pointer = pointer;
+            gamepadPos.set(screenX * scale, screenY * scale);
+            joystickPos.set(screenX * scale, screenY * scale);
+            active = true;
+        }
         return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        joystickPos.set(gamepadPos.x, gamepadPos.y);
+        if (controllable) {
+            joystickPos.set(gamepadPos.x, gamepadPos.y);
+            active = false;
+            this.pointer = -1;
+        }
         return false;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        if (this.pointer == pointer)
+            if (active && controllable) {
+                angle = -MathUtils.radiansToDegrees * MathUtils.atan2(screenY * scale - gamepadPos.y, screenX * scale - gamepadPos.x);
+                if (angle < 0) angle += 360;
 
-        angle = -MathUtils.radiansToDegrees * MathUtils.atan2(screenY - gamepadPos.y, screenX - gamepadPos.x);
-        if (angle < 0) angle += 360;
-
-        if (Math.hypot(screenY - gamepadPos.y, screenX - gamepadPos.x) < gamepad.getWidth() / 2) {
-            joystickPos.x = screenX;
-            joystickPos.y = screenY;
-        } else {
-            joystickPos.x = gamepadPos.x + gamepad.getWidth() / 2 * MathUtils.cosDeg(-angle);
-            joystickPos.y = gamepadPos.y + gamepad.getWidth() / 2 * MathUtils.sinDeg(-angle);
-        }
-
+                if (Math.hypot(screenY * scale - gamepadPos.y, screenX * scale - gamepadPos.x) < gamepad.getWidth() / 2) {
+                    joystickPos.x = screenX * scale;
+                    joystickPos.y = screenY * scale;
+                } else {
+                    joystickPos.x = gamepadPos.x + gamepad.getWidth() / 2 * MathUtils.cosDeg(-angle);
+                    joystickPos.y = gamepadPos.y + gamepad.getWidth() / 2 * MathUtils.sinDeg(-angle);
+                }
+            }
         return false;
     }
 
@@ -141,19 +164,24 @@ public class Joystick extends Actor implements InputProcessor {
         return false;
     }
 
-    public float getSCREEN_WIDTH() {
-        return SCREEN_WIDTH;
+    public boolean isControllable() {
+        return controllable;
     }
 
-    public void setSCREEN_WIDTH(float SCREEN_WIDTH) {
-        this.SCREEN_WIDTH = SCREEN_WIDTH;
+    public void setControllable(boolean controllable) {
+        this.controllable = controllable;
     }
 
-    public float getSCREEN_HEIGHT() {
-        return SCREEN_HEIGHT;
+    @Override
+    public void setPosition(float x, float y) {
+        if (controllable) {
+            super.setPosition(x, y);
+            gamepadPos.set(x, y);
+            joystickPos.set(x, y);
+        }
     }
 
-    public void setSCREEN_HEIGHT(float SCREEN_HEIGHT) {
-        this.SCREEN_HEIGHT = SCREEN_HEIGHT;
+    public void setScale(float scale) {
+        this.scale = scale;
     }
 }

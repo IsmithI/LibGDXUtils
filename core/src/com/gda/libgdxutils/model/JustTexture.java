@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 /**
@@ -11,14 +12,19 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
  */
 public class JustTexture extends Actor {
     private Sprite sprite;
+    private TextureRegion textureRegion;
 
     public JustTexture(String texture, float x, float y) {
-        setSprite(new Sprite(new Texture(texture)));
+
+        textureRegion = new TextureRegion(new Texture(texture));
+        sprite = new Sprite(textureRegion);
+
         setPosition(x, y);
     }
 
     public JustTexture(String texture, float x, float y, float width, float height){
-        setSprite(new Sprite(new Texture(texture)));
+        textureRegion = new TextureRegion(new Texture(texture));
+        sprite = new Sprite(textureRegion);
         setPosition(x, y);
         setSize(width, height);
     }
@@ -51,5 +57,9 @@ public class JustTexture extends Actor {
 
     public Sprite getSprite() {
         return sprite;
+    }
+
+    public TextureRegion getTextureRegion() {
+        return textureRegion;
     }
 }

@@ -3,10 +3,7 @@ package com.gda.libgdxutils.model;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -78,6 +75,10 @@ public abstract class Button extends Actor {
                 Button.this.touchUp();
             }
         });
+    }
+
+    public Button(TextureRegion touchUp, TextureRegion touchDown, float x, float y) {
+
     }
 
     //Позволяет наложить на кнопку текст
