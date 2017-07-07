@@ -6,6 +6,7 @@ import com.badlogic.gdx.Preferences;
 /**
  * Created by ANTON on 5/9/2017.
  * Настройки исходя из названий переменных
+ * Test
  */
 
 public class Setting {
