@@ -37,6 +37,7 @@ public class Text extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
+        setColor(batch.getColor().r, batch.getColor().g, batch.getColor().b, parentAlpha);
         font.draw(batch, value, getX(), getY(), 0, textAlign, false);
     }
 
