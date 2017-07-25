@@ -45,6 +45,8 @@ public class Setting {
         preferences.putBoolean("Sound", sound);
     }
 
+    public void setMusic(boolean music) {preferences.putBoolean("Music", music); }
+
     public void setVibration(boolean vibration) {
         preferences.putBoolean("Vibration", vibration);
     }
@@ -60,6 +62,8 @@ public class Setting {
     public boolean getSound() {
         return preferences.getBoolean("Sound", true);
     }
+
+    public boolean getMusic() { return preferences.getBoolean("Music", true); }
 
     public boolean getVibration() {
         return preferences.getBoolean("Vibration", true);
